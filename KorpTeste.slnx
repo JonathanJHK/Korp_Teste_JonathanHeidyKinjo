@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/Estoque.Api/Estoque.Api.csproj" />
+    <Project Path="backend/Faturamento.Api/Faturamento.Api.csproj" />
+  </Folder>
+</Solution>
