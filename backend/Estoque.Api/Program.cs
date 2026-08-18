@@ -1,4 +1,5 @@
 using Estoque.Api.Data;
+using Estoque.Api.Exceptions;
 using Estoque.Api.Interfaces;
 using Estoque.Api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,14 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Configurando o tratamento global de exceções
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
+
+// Configurando o tratamento global de exceções
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
