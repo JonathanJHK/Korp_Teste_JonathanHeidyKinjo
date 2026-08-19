@@ -35,6 +35,16 @@ namespace Estoque.Api.Exceptions
                     "Código de produto duplicado",
                     exception.Message),
 
+                SaldoInsuficienteException => (
+                    StatusCodes.Status409Conflict,
+                    "Saldo insuficiente",
+                    exception.Message),
+
+                ProdutoDuplicadoNaBaixaException => (
+                    StatusCodes.Status409Conflict,
+                    "Produto duplicado na baixa",
+                    exception.Message),
+
                 _ => (
                     StatusCodes.Status500InternalServerError,
                     "Erro interno do servidor",
