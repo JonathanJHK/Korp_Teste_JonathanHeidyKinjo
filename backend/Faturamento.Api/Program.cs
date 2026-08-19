@@ -1,5 +1,6 @@
 using Faturamento.Api.Clients;
 using Faturamento.Api.Data;
+using Faturamento.Api.Exceptions;
 using Faturamento.Api.Interfaces;
 using Faturamento.Api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,35 +18,53 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddHttpClient<IEstoqueClient, EstoqueClient>(
+    // Configurando o HttpClient para o serviço de Estoque
     (serviceProvider, httpClient) =>
     {
-        // Configurando o endereço do serviço de Estoque
+        // Obtendo a instância do serviço IConfiguration
         var configuration =
             serviceProvider.GetRequiredService<IConfiguration>();
 
-        // Configurando o endereço do serviço de Estoque
+        // Obtendo o endereço do serviço de Estoque a partir das configurações
         var baseUrl = configuration[
             "Services:EstoqueApi:BaseUrl"];
 
+        // Verificando se o endereço do serviço de Estoque está configurado
         if (string.IsNullOrWhiteSpace(baseUrl))
         {
             throw new InvalidOperationException(
                 "O endereço do serviço de Estoque não foi configurado.");
         }
 
+        // Definindo o endereço base do httpClient
         httpClient.BaseAddress = new Uri(baseUrl);
 
+        // Definindo o tempo limite da requisição
         httpClient.Timeout = TimeSpan.FromSeconds(5);
     });
 
 builder.Services.AddScoped<INotaFiscalService, NotaFiscalService>();
 
+// Configurando o tratamento global de exceções
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
+
+// Configurando o tratamento global de exceções
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint(
+            "/openapi/v1.json",
+            "Faturamento API");
+    });
 }
 
 app.UseHttpsRedirection();
