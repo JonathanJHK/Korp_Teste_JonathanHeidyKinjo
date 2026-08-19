@@ -75,5 +75,23 @@ namespace Faturamento.Api.Controllers
             return Ok(notaFiscal);
         }
 
+        [HttpPost("{id:int:min(1)}/imprimir")]
+        [ProducesResponseType<NotaFiscalResponseDTO>(
+            StatusCodes.Status200OK)]
+        [ProducesResponseType<ProblemDetails>(
+            StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ProblemDetails>(
+            StatusCodes.Status409Conflict)]
+        [ProducesResponseType<ProblemDetails>(
+            StatusCodes.Status503ServiceUnavailable)]
+        public async Task<ActionResult<NotaFiscalResponseDTO>> Imprimir(
+            int id,
+            CancellationToken cancellationToken)
+        {
+            var notaFiscal = await _notaFiscalService.Imprimir(id, cancellationToken);
+
+            return Ok(notaFiscal);
+        }
+
     }
 }

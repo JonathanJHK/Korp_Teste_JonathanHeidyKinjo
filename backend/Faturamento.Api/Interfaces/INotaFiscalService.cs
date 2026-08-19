@@ -14,5 +14,9 @@ namespace Faturamento.Api.Interfaces
         Task<NotaFiscalResponseDTO> BuscarPorId(
             int id,
             CancellationToken cancellationToken);
+
+        Task<NotaFiscalResponseDTO> Imprimir(
+            int id,
+            CancellationToken cancellationToken);
     }
 }

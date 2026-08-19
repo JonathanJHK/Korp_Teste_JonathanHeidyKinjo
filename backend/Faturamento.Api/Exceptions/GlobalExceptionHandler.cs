@@ -1,3 +1,4 @@
+using Estoque.Api.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,16 @@ namespace Faturamento.Api.Exceptions
                 ServicoEstoqueIndisponivelException => (
                     StatusCodes.Status503ServiceUnavailable,
                     "Serviço de Estoque indisponível",
+                    exception.Message),
+
+                NotaFiscalJaFechadaException => (
+                    StatusCodes.Status409Conflict,
+                    "Nota fiscal já fechada",
+                    exception.Message),
+
+                OperacaoEstoqueRejeitadaException => (
+                    StatusCodes.Status409Conflict,
+                    "Operação de estoque rejeitada",
                     exception.Message),
 
                 _ => (

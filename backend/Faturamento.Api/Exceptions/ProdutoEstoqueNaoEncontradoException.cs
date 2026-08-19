@@ -1,6 +1,14 @@
-namespace Faturamento.Api.Exceptions
+namespace Faturamento.Api.Exceptions;
+
+public class ProdutoEstoqueNaoEncontradoException : Exception
 {
-    public class ProdutoEstoqueNaoEncontradoException(int produtoId) : Exception(
-        $"O produto com o ID {produtoId} não foi encontrado no Estoque."
-        );
+    public ProdutoEstoqueNaoEncontradoException(int produtoId)
+        : base(
+            $"O produto com o ID {produtoId} não foi encontrado no Estoque.")
+    {
+    }
+
+    public ProdutoEstoqueNaoEncontradoException(string mensagem) : base(mensagem)
+    {
+    }
 }
