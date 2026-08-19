@@ -10,6 +10,7 @@ namespace Estoque.Api.Data
         }
 
         public DbSet<Produto> Produtos => Set<Produto>();
+        public DbSet<OperacaoEstoque> OperacoesEstoque => Set<OperacaoEstoque>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,22 @@ namespace Estoque.Api.Data
                     table.HasCheckConstraint(
                         "CK_Produtos_Saldo_NaoNegativo",
                         "\"Saldo\" >= 0"));
+            });
+
+            modelBuilder.Entity<OperacaoEstoque>(entity =>
+            {
+                entity.ToTable("OperacoesEstoque");
+
+                entity.HasKey(operacao =>
+                    operacao.ChaveIdempotencia);
+
+                entity.Property(operacao =>
+                        operacao.ChaveIdempotencia)
+                    .HasMaxLength(100);
+
+                entity.Property(operacao =>
+                        operacao.DataDeProcessamento)
+                    .IsRequired();
             });
         }
     }
