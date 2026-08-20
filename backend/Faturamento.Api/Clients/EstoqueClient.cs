@@ -6,6 +6,8 @@ using Faturamento.Api.DTOs.Estoque;
 using Faturamento.Api.Exceptions;
 using Faturamento.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Polly.CircuitBreaker;
+using Polly.Timeout;
 
 namespace Faturamento.Api.Clients
 {
@@ -180,6 +182,18 @@ namespace Faturamento.Api.Clients
             {
                 throw new ServicoEstoqueIndisponivelException(
                     "O tempo limite da operação de baixa foi excedido.",
+                    exception);
+            }
+            catch (BrokenCircuitException exception)
+            {
+                throw new ServicoEstoqueIndisponivelException(
+                    "O serviço de Estoque está temporariamente indisponível. Tente novamente em alguns segundos.",
+                    exception);
+            }
+            catch (TimeoutRejectedException exception)
+            {
+                throw new ServicoEstoqueIndisponivelException(
+                    "O tempo limite de comunicação com o Estoque foi excedido.",
                     exception);
             }
             // Converte erros de conexão ou transporte em uma falha de serviço.
