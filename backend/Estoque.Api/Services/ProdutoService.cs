@@ -77,7 +77,7 @@ namespace Estoque.Api.Services
         {
             return await _appDbContext.Produtos
                 .AsNoTracking()
-                .OrderBy(produto => produto.Descricao)
+                .OrderBy(produto => produto.Codigo)
                 .Select(produto => new ProdutoResponseDTO
                 {
                     Id = produto.Id,

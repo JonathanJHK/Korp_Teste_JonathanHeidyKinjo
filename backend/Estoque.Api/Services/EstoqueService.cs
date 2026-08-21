@@ -178,7 +178,7 @@ namespace Estoque.Api.Services
             }
 
             throw new SaldoInsuficienteException(
-                produtoId,
+                produto.Codigo,
                 produto.Saldo,
                 quantidade
                 );

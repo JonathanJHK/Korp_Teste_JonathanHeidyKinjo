@@ -84,8 +84,10 @@ namespace Faturamento.Api.Services
             // lidos e não serão alterados nesta operação.
             return await _appDbContext.NotasFiscais
                 .AsNoTracking()
-                // Exibe primeiro as notas com maior número.
-                .OrderByDescending(nota => nota.Numero)
+                // Exibe primeiro as notas abertas e, dentro de cada status,
+                // mantém a ordem crescente pelo identificador.
+                .OrderBy(nota => nota.Status == StatusNotaFiscal.Aberta ? 0 : 1)
+                .ThenBy(nota => nota.Id)
                 // Projeta diretamente para o DTO, evitando carregar entidades
                 // completas desnecessariamente.
                 .Select(nota => new NotaFiscalResponseDTO
