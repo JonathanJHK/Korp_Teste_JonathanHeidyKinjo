@@ -92,7 +92,6 @@ export class CadastrarProdutoModal {
           // Executado tanto quando a requisição tem sucesso quanto quando falha.
           this.enviando.set(false);
           this.loadingService.stop();
-          this.fechar();
         }),
       )
       .subscribe({
@@ -107,6 +106,10 @@ export class CadastrarProdutoModal {
           });
 
           this.produtoCadastrado.emit(produto);
+
+          // Altera a visibilidade e limpa os dados antigos do formulário.
+          this.visible.set(false);
+          this.limparFormulario();
         },
         // Executado quando a requisição falha.
         error: (error) => {

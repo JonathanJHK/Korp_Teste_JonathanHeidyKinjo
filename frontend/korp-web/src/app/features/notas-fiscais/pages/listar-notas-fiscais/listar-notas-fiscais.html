@@ -119,6 +119,8 @@
   (visibleChange)="dialogDetalhesVisivel.set($event)"
 />
 
+<app-nota-fiscal-impressao class="print-container" [notaFiscal]="notaFiscalParaImpressao()" />
+
 <p-confirmdialog key="confirmImpressao">
   <ng-template #message let-message>
     <div

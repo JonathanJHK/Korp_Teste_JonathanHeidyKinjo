@@ -1,0 +1,92 @@
+@if (notaFiscal(); as nota) {
+  <article class="nota-fiscal">
+    <header class="cabecalho">
+      <div>
+        <h1>Nota fiscal</h1>
+
+        <p>Sistema de Gestão Fiscal</p>
+      </div>
+
+      <div class="numero">
+        <span>Número</span>
+        <strong>{{ nota.numero }}</strong>
+      </div>
+    </header>
+
+    <section class="informacoes">
+      <div>
+        <span>Status</span>
+        <strong>{{ nota.status }}</strong>
+      </div>
+
+      <div>
+        <span>Data de criação</span>
+
+        <strong>
+          {{ nota.dataDeCriacao | date: "dd/MM/yyyy 'às' HH:mm" }}
+        </strong>
+      </div>
+
+      <div>
+        <span>Data de fechamento</span>
+
+        <strong>
+          @if (nota.dataDeFechamento) {
+            {{ nota.dataDeFechamento | date: "dd/MM/yyyy 'às' HH:mm" }}
+          } @else {
+            Não informada
+          }
+        </strong>
+      </div>
+    </section>
+
+    <section class="produtos">
+      <h2>Produtos</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Produto Código</th>
+            <th class="alinhado-direita">Quantidade</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (item of nota.itens; track item.id; let indice = $index) {
+            <tr>
+              <td>{{ indice + 1 }}</td>
+
+              <td>
+                <strong>{{ item.codigoProduto }}</strong>
+                <span class="descricao-produto">
+                  {{ item.descricaoProduto }}
+                </span>
+              </td>
+
+              <td class="alinhado-direita">
+                {{ item.quantidade }}
+              </td>
+            </tr>
+          }
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <td colspan="2">Quantidade total</td>
+
+            <td class="alinhado-direita">
+              {{ calcularQuantidadeTotal(nota) }}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+
+    <footer class="rodape">
+      <p>Documento referente à nota fiscal nº {{ nota.numero }}.</p>
+
+      <p>Gerado pelo Sistema de Gestão Fiscal.</p>
+    </footer>
+  </article>
+}

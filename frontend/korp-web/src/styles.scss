@@ -23,3 +23,36 @@ body {
 .ngx-spinner-overlay.fade-out {
   pointer-events: none !important;
 }
+
+.print-container {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+
+  body {
+    margin: 0;
+    background: #ffffff;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .print-container,
+  .print-container * {
+    visibility: visible !important;
+  }
+
+  .print-container {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    background: #ffffff;
+  }
+}

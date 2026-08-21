@@ -14,6 +14,7 @@ import { LoadingService } from '@core/services/loading.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { DetalhesNotaFiscalModal } from '../../components/detalhes-nota-fiscal-modal/detalhes-nota-fiscal-modal';
+import { NotaFiscalImpressao } from '../../components/nota-fiscal-impressao/nota-fiscal-impressao';
 import { iNotaFiscalResponseDTO, StatusNotaFiscal } from '../../models/nota-fiscal.model';
 import { NotaFiscalService } from '../../services/nota-fiscal.service';
 
@@ -28,6 +29,7 @@ import { NotaFiscalService } from '../../services/nota-fiscal.service';
     DetalhesNotaFiscalModal,
     ConfirmDialog,
     TooltipModule,
+    NotaFiscalImpressao,
   ],
   templateUrl: './listar-notas-fiscais.html',
   styleUrl: './listar-notas-fiscais.scss',
@@ -42,6 +44,8 @@ export class ListarNotasFiscais implements OnInit {
 
   protected readonly notasFiscais = signal<iNotaFiscalResponseDTO[]>([]);
   protected readonly notaFiscalSelecionada = signal<iNotaFiscalResponseDTO | null>(null);
+
+  protected readonly notaFiscalParaImpressao = signal<iNotaFiscalResponseDTO | null>(null);
 
   protected readonly dialogDetalhesVisivel = signal(false);
 
@@ -163,6 +167,8 @@ export class ListarNotasFiscais implements OnInit {
 
           this.atualizarNotaFiscalNoDialog(notaFiscalAtualizada);
 
+          this.notaFiscalParaImpressao.set(notaFiscalAtualizada);
+
           this.logger.info(
             'ListarNotasFiscaisComponent: nota fiscal impressa',
             notaFiscalAtualizada.id,
@@ -175,6 +181,8 @@ export class ListarNotasFiscais implements OnInit {
               `A nota fiscal nº ${notaFiscalAtualizada.numero} ` +
               'foi fechada e o estoque foi atualizado.',
           });
+
+          this.abrirImpressaoNavegador(notaFiscalAtualizada);
         },
         error: (error) => {
           this.tratarErroImpressao(error);
@@ -196,6 +204,24 @@ export class ListarNotasFiscais implements OnInit {
     if (notaSelecionada?.id === notaFiscalAtualizada.id) {
       this.notaFiscalSelecionada.set(notaFiscalAtualizada);
     }
+  }
+
+  private abrirImpressaoNavegador(notaFiscal: iNotaFiscalResponseDTO): void {
+    const tituloAnterior = document.title;
+
+    document.title = `Nota-Fiscal-${notaFiscal.numero}`;
+
+    const restaurarTitulo = (): void => {
+      document.title = tituloAnterior;
+    };
+
+    window.addEventListener('afterprint', restaurarTitulo, { once: true });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.print();
+      });
+    });
   }
 
   private tratarErroImpressao(error: HttpErrorResponse): void {
