@@ -1,6 +1,4 @@
-<p-toast />
-
-<section class="p-4 md:p-6">
+<section id="listar-produto" class="p-4 md:p-6">
   <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <div>
       <h1 class="text-2xl font-semibold text-surface-900">Produtos</h1>
@@ -17,7 +15,7 @@
         (onClick)="carregarProdutos()"
       />
 
-      <p-button label="Cadastrar produto" icon="pi pi-plus" routerLink="/produtos/novo" />
+      <p-button label="Cadastrar produto" icon="pi pi-plus" (onClick)="abrirCadastro()" />
     </div>
   </div>
 
@@ -25,7 +23,7 @@
     <p-table
       [value]="produtos()"
       dataKey="id"
-      [paginator]="true"
+      [paginator]="false"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 20]"
       [tableStyle]="{ 'min-width': '40rem' }"
@@ -64,3 +62,9 @@
     </p-table>
   </div>
 </section>
+
+<app-cadastrar-produto-modal
+  [visible]="dialogCadastroVisivel()"
+  (visibleChange)="dialogCadastroVisivel.set($event)"
+  (produtoCadastrado)="produtoCadastrado()"
+/>

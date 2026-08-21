@@ -1,0 +1,143 @@
+<section id="criar-nota-fiscal" class="mx-auto p-4 md:p-6">
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold text-surface-900">Nova nota fiscal</h1>
+
+    <p class="mt-1 text-surface-600">Selecione os produtos e informe suas quantidades.</p>
+  </div>
+
+  <form
+    class="rounded-xl border border-surface-200 bg-white p-5 shadow-sm md:p-6"
+    [formGroup]="form"
+    (ngSubmit)="cadastrar()"
+  >
+    <div formArrayName="itens" class="flex flex-col gap-4">
+      @for (itemForm of itens.controls; track itemForm; let index = $index) {
+        <div
+          class="grid grid-cols-1 gap-4 rounded-lg border border-surface-200 p-4 md:grid-cols-[1fr_12rem_auto]"
+          [formGroupName]="index"
+        >
+          <div class="flex flex-col gap-2">
+            <label [for]="'produto-' + index" class="font-medium"> Produto </label>
+
+            <p-select
+              [inputId]="'produto-' + index"
+              formControlName="produtoId"
+              [options]="produtos()"
+              optionLabel="descricao"
+              optionValue="id"
+              placeholder="Selecione um produto"
+              [filter]="true"
+              filterBy="codigo,descricao"
+              [appendTo]="'body'"
+              styleClass="w-full"
+              (onChange)="aoSelecionarProduto(index)"
+            >
+              <ng-template #selectedItem let-produto>
+                @if (produto) {
+                  <span> {{ produto.codigo }} — {{ produto.descricao }} </span>
+                }
+              </ng-template>
+
+              <ng-template #item let-produto>
+                <div class="flex w-full justify-between gap-4">
+                  <div>
+                    <span class="block font-medium">
+                      {{ produto.codigo }}
+                    </span>
+
+                    <span class="text-sm text-surface-500">
+                      {{ produto.descricao }}
+                    </span>
+                  </div>
+
+                  <span class="whitespace-nowrap text-sm"> Saldo: {{ produto.saldo }} </span>
+                </div>
+              </ng-template>
+            </p-select>
+
+            @if (
+              itemForm.controls.produtoId.touched &&
+              itemForm.controls.produtoId.hasError('required')
+            ) {
+              <small class="text-red-600"> Selecione um produto. </small>
+            }
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label [for]="'quantidade-' + index" class="font-medium"> Quantidade </label>
+
+            <p-inputnumber
+              [inputId]="'quantidade-' + index"
+              formControlName="quantidade"
+              [min]="1"
+              [step]="1"
+              [useGrouping]="false"
+              [showButtons]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full"
+            />
+
+            @if (
+              itemForm.controls.quantidade.touched && itemForm.controls.quantidade.hasError('min')
+            ) {
+              <small class="text-red-600"> A quantidade deve ser maior que zero. </small>
+            }
+
+            @if (
+              itemForm.controls.quantidade.touched && itemForm.controls.quantidade.hasError('max')
+            ) {
+              <small class="text-red-600">
+                Saldo disponível:
+                {{ obterSaldoProduto(index) }}
+              </small>
+            }
+          </div>
+
+          <div class="flex items-center justify-end">
+            <p-button
+              type="button"
+              icon="pi pi-trash"
+              severity="danger"
+              [outlined]="true"
+              [disabled]="itens.length === 1 || enviando()"
+              ariaLabel="Remover produto"
+              (onClick)="removerItem(index)"
+            />
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="mt-5 flex justify-center md:justify-start">
+      <p-button
+        type="button"
+        label="Adicionar produto"
+        icon="pi pi-plus"
+        severity="secondary"
+        [outlined]="true"
+        [disabled]="enviando()"
+        (onClick)="adicionarItem()"
+      />
+    </div>
+
+    <div
+      class="mt-8 flex flex-col-reverse gap-3 border-t border-surface-200 pt-5 flex-row justify-end"
+    >
+      <p-button
+        type="button"
+        label="Cancelar"
+        severity="secondary"
+        [outlined]="true"
+        [disabled]="enviando()"
+        routerLink="/notas-fiscais"
+      />
+
+      <p-button
+        type="submit"
+        label="Criar nota fiscal"
+        icon="pi pi-check"
+        [disabled]="enviando() || produtos().length === 0"
+      />
+    </div>
+  </form>
+</section>

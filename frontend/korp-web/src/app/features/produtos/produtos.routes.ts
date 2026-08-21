@@ -9,12 +9,4 @@ export const PRODUTOS_ROUTES: Routes = [
         (component) => component.ListarProdutos,
       ),
   },
-  {
-    path: 'novo',
-    title: 'Cadastrar produto',
-    loadComponent: () =>
-      import('./pages/cadastrar-produto/cadastrar-produto').then(
-        (component) => component.CadastrarProduto,
-      ),
-  },
 ];

@@ -1,1 +1,134 @@
-<h1 class="text-2xl font-semibold text-color">Notas fiscais</h1>
+<section id="listar-notas-fiscais" class="p-4 md:p-6">
+  <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-surface-900">Notas fiscais</h1>
+
+      <p class="mt-1 text-surface-600">Consulte e gerencie as notas fiscais emitidas.</p>
+    </div>
+
+    <div class="flex gap-2">
+      <p-button
+        label="Atualizar"
+        icon="pi pi-refresh"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="carregarNotasFiscais()"
+      />
+
+      <p-button label="Nova nota fiscal" icon="pi pi-plus" routerLink="/notas-fiscais/nova" />
+    </div>
+  </div>
+
+  <div class="overflow-hidden rounded-xl border border-surface-200 bg-white">
+    <p-table
+      [value]="notasFiscais()"
+      dataKey="id"
+      [paginator]="false"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      [tableStyle]="{ 'min-width': '60rem' }"
+    >
+      <ng-template #header>
+        <tr>
+          <th class="w-32">Número</th>
+          <th class="w-36">Status</th>
+          <th>Data de criação</th>
+          <th>Data de fechamento</th>
+          <th class="w-36 text-center">Produtos</th>
+          <th class="w-36 text-center">Quantidade</th>
+          <th class="w-72 text-center">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-notaFiscal>
+        <tr>
+          <td>
+            <span class="font-semibold">
+              {{ notaFiscal.numero }}
+            </span>
+          </td>
+
+          <td>
+            <p-tag
+              [value]="notaFiscal.status"
+              [severity]="obterSeveridadeStatus(notaFiscal.status)"
+            />
+          </td>
+
+          <td>
+            {{ notaFiscal.dataDeCriacao | date: "dd/MM/yyyy 'às' HH:mm" }}
+          </td>
+
+          <td>
+            @if (notaFiscal.dataDeFechamento) {
+              {{ notaFiscal.dataDeFechamento | date: "dd/MM/yyyy 'às' HH:mm" }}
+            } @else {
+              <span class="text-surface-500"> Não fechada </span>
+            }
+          </td>
+
+          <td class="text-center">
+            {{ notaFiscal.itens.length }}
+          </td>
+
+          <td class="text-center">
+            {{ calcularQuantidadeTotal(notaFiscal) }}
+          </td>
+
+          <td class="text-center">
+            <div class="flex justify-center gap-2">
+              <p-button
+                type="button"
+                label="Visualizar"
+                icon="pi pi-eye"
+                size="small"
+                styleClass="vertical-align: super"
+                [outlined]="false"
+                (onClick)="visualizarNotaFiscal(notaFiscal.id)"
+              />
+              <p-button
+                type="button"
+                label="Imprimir"
+                icon="pi pi-print"
+                size="small"
+                severity="secondary"
+                styleClass="vertical-align: super"
+                [outlined]="true"
+                [disabled]="!notaEstaAberta(notaFiscal)"
+                (onClick)="confirmarImpressao(notaFiscal)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="7" class="py-10 text-center text-surface-500">
+            Nenhuma nota fiscal cadastrada.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</section>
+
+<app-detalhes-nota-fiscal-modal
+  [notaFiscal]="notaFiscalSelecionada()"
+  [visible]="dialogDetalhesVisivel()"
+  (visibleChange)="dialogDetalhesVisivel.set($event)"
+/>
+
+<p-confirmdialog key="confirmImpressao">
+  <ng-template #message let-message>
+    <div
+      class="flex flex-col items-center w-full gap-4 border-b border-surface-200 dark:border-surface-700"
+    >
+      <i [class]="message.icon" class="!text-6xl text-primary-500"></i>
+      <p class="font-semibold">{{ message.message }}</p>
+      <span class="text-sm text-surface-500"
+        >Essa operação fechará a nota e atualizará o estoque.</span
+      >
+    </div>
+  </ng-template>
+</p-confirmdialog>

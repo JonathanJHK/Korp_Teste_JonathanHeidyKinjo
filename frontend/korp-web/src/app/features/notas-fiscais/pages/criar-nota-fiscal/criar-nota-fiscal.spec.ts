@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CadastrarProduto } from './cadastrar-produto';
+import { CriarNotaFiscal } from './criar-nota-fiscal';
 
-describe('CadastrarProduto', () => {
-  let component: CadastrarProduto;
-  let fixture: ComponentFixture<CadastrarProduto>;
+describe('CriarNotaFiscal', () => {
+  let component: CriarNotaFiscal;
+  let fixture: ComponentFixture<CriarNotaFiscal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CadastrarProduto]
+      imports: [CriarNotaFiscal]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CadastrarProduto);
+    fixture = TestBed.createComponent(CriarNotaFiscal);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

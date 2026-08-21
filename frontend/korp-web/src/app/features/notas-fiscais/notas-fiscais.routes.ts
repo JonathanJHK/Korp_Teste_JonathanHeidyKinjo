@@ -13,8 +13,8 @@ export const NOTAS_FISCAIS_ROUTES: Routes = [
     path: 'nova',
     title: 'Cadastrar nota fiscal',
     loadComponent: () =>
-      import('./pages/cadastrar-nota-fiscal/cadastrar-nota-fiscal').then(
-        (component) => component.CadastrarNotaFiscal,
+      import('./pages/criar-nota-fiscal/criar-nota-fiscal').then(
+        (component) => component.CriarNotaFiscal,
       ),
   },
 ];
