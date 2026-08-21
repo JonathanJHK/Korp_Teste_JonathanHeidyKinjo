@@ -7,6 +7,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingService } from '@core/services/loading.service';
@@ -26,6 +27,7 @@ import { NotaFiscalService } from '../../services/nota-fiscal.service';
     TagModule,
     DetalhesNotaFiscalModal,
     ConfirmDialog,
+    TooltipModule,
   ],
   templateUrl: './listar-notas-fiscais.html',
   styleUrl: './listar-notas-fiscais.scss',

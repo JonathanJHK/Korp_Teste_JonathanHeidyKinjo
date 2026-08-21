@@ -1,8 +1,21 @@
 <section id="criar-nota-fiscal" class="mx-auto p-4 md:p-6">
   <div class="mb-6">
-    <h1 class="text-2xl font-semibold text-surface-900">Nova nota fiscal</h1>
-
-    <p class="mt-1 text-surface-600">Selecione os produtos e informe suas quantidades.</p>
+    <div class="flex items-center gap-3">
+      <p-button
+        type="button"
+        icon="pi pi-chevron-left"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        routerLink="/notas-fiscais"
+        ariaLabel="Voltar para a lista de notas fiscais"
+        title="Voltar para notas fiscais"
+      />
+      <div class="flex-1">
+        <h1 class="text-2xl font-semibold text-surface-900">Nova nota fiscal</h1>
+        <p class="mt-1 text-surface-600">Selecione os produtos e informe suas quantidades.</p>
+      </div>
+    </div>
   </div>
 
   <form
@@ -29,7 +42,7 @@
               [filter]="true"
               filterBy="codigo,descricao"
               [appendTo]="'body'"
-              styleClass="w-full"
+              class="w-full"
               (onChange)="aoSelecionarProduto(index)"
             >
               <ng-template #selectedItem let-produto>
@@ -73,7 +86,7 @@
               [step]="1"
               [useGrouping]="false"
               [showButtons]="true"
-              styleClass="w-full"
+              class="w-full"
               inputStyleClass="w-full"
             />
 
@@ -93,7 +106,7 @@
             }
           </div>
 
-          <div class="flex items-center justify-end">
+          <div class="flex items-end justify-end">
             <p-button
               type="button"
               icon="pi pi-trash"
